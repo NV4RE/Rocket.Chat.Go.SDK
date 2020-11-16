@@ -129,9 +129,8 @@ func (c *Client) ListGroup() ([]models.Group, error) {
 //
 // https://docs.rocket.chat/api/rest-api/methods/groups/list
 func (c *Client) MembersGroup(group *models.Group) ([]models.User, error) {
-	var body = fmt.Sprintf(`{ "roomId": "%s"}`, group.ID)
 	response := new(GroupMembersResponse)
-	err := c.Post("groups.members", bytes.NewBufferString(body), response)
+	err := c.Get("groups.members", url.Values{"roomId": []string{group.ID}}, response)
 	return response.Members, err
 }
 
@@ -185,8 +184,16 @@ func (c *Client) RemoveOwnerGroup(group *models.InviteGroupRequest) (*models.Gro
 //
 // https://docs.rocket.chat/api/rest-api/methods/groups/history
 func (c *Client) HistoryGroup(group *models.Group) ([]models.Group, error) {
-	var body = fmt.Sprintf(`{ "roomId": "%s"}`, group.ID)
 	response := new(GroupsResponse)
-	err := c.Post("groups.history", bytes.NewBufferString(body), response)
+	err := c.Get("groups.history", url.Values{"roomId": []string{group.ID}}, response)
+	return response.Groups, err
+}
+
+// MessagesGroup Lists all of the specific group messages on the server. It supports the Offset, Count, and Sort Query Parameters along with Query and Fields Query Parameters.
+//
+// https://docs.rocket.chat/api/rest-api/methods/groups/messages
+func (c *Client) MessagesGroup(group *models.Group) ([]models.Group, error) {
+	response := new(GroupsResponse)
+	err := c.Get("groups.messages", url.Values{"roomId": []string{group.ID}}, response)
 	return response.Groups, err
 }
