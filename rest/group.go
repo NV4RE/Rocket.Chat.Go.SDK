@@ -121,7 +121,7 @@ func (c *Client) LeaveGroup(group *models.Group) error {
 // https://docs.rocket.chat/api/rest-api/methods/groups/list
 func (c *Client) ListGroup() ([]models.Group, error) {
 	response := new(GroupsResponse)
-	err := c.Post("groups.list", nil, response)
+	err := c.Get("groups.list", nil, response)
 	return response.Groups, err
 }
 
