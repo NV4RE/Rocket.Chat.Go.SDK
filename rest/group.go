@@ -24,6 +24,11 @@ type GroupMembersResponse struct {
 	Members []models.User `json:"members"`
 }
 
+type GroupMessagesResponse struct {
+	Status
+	Messages []models.Message `json:"messages"`
+}
+
 // CreateGroup Creates a new private group, optionally including specified users. The group creator is always included.
 //
 // https://docs.rocket.chat/api/rest-api/methods/groups/create
@@ -183,17 +188,17 @@ func (c *Client) RemoveOwnerGroup(group *models.InviteGroupRequest) (*models.Gro
 // HistoryGroup retrieves the messages from a private group, only if you're part of the group.
 //
 // https://docs.rocket.chat/api/rest-api/methods/groups/history
-func (c *Client) HistoryGroup(group *models.Group) ([]models.Group, error) {
-	response := new(GroupsResponse)
+func (c *Client) HistoryGroup(group *models.Group) ([]models.Message, error) {
+	response := new(GroupMessagesResponse)
 	err := c.Get("groups.history", url.Values{"roomId": []string{group.ID}}, response)
-	return response.Groups, err
+	return response.Messages, err
 }
 
 // MessagesGroup Lists all of the specific group messages on the server. It supports the Offset, Count, and Sort Query Parameters along with Query and Fields Query Parameters.
 //
 // https://docs.rocket.chat/api/rest-api/methods/groups/messages
-func (c *Client) MessagesGroup(group *models.Group) ([]models.Group, error) {
-	response := new(GroupsResponse)
+func (c *Client) MessagesGroup(group *models.Group) ([]models.Message, error) {
+	response := new(GroupMessagesResponse)
 	err := c.Get("groups.messages", url.Values{"roomId": []string{group.ID}}, response)
-	return response.Groups, err
+	return response.Messages, err
 }
