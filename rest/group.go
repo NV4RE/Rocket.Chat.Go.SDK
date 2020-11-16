@@ -180,3 +180,13 @@ func (c *Client) RemoveOwnerGroup(group *models.InviteGroupRequest) (*models.Gro
 
 	return &response.Group, err
 }
+
+// HistoryGroup retrieves the messages from a private group, only if you're part of the group.
+//
+// https://docs.rocket.chat/api/rest-api/methods/groups/history
+func (c *Client) HistoryGroup(group *models.Group) ([]models.Group, error) {
+	var body = fmt.Sprintf(`{ "roomId": "%s"}`, group.ID)
+	response := new(GroupsResponse)
+	err := c.Post("groups.history", bytes.NewBufferString(body), response)
+	return response.Groups, err
+}
